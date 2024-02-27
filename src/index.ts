@@ -11,7 +11,7 @@ import {
 } from './components/AppData';
 import { Page } from './components/Page';
 import { Card, PreviewItem, ShopItem, BasketItem } from './components/Card';
-import { cloneTemplate, createElement, ensureElement } from './utils/utils';
+import { cloneTemplate, ensureElement } from './utils/utils';
 import { Basket } from './components/Basket';
 import { Order } from './components/Order';
 import { Contacts } from './components/Contacts';
@@ -114,7 +114,6 @@ events.on('card:selected', (item: ProductItem) => {
 events.on('basket:changed', (item: ProductItem) => {
 	appData.addProductToBasket(item);
 	page.counter = appData.getBasketAmount();
-	console.log(appData.basket);
 	modal.close();
 });
 
@@ -166,6 +165,7 @@ events.on('orderFormErrors:change', (errors: Partial<IOrder>) => {
 		.filter((i) => !!i)
 		.join('; ');
 });
+
 // Изменилось одно из полей
 events.on(
 	/^order\..*:change/,
@@ -185,6 +185,7 @@ events.on('order:submit', () => {
 		}),
 	});
 });
+
 // Изменилось состояние валидации формы ввода контактов
 events.on('contactsFormErrors:change', (errors: Partial<IOrder>) => {
 	const { email, phone } = errors;
@@ -193,6 +194,7 @@ events.on('contactsFormErrors:change', (errors: Partial<IOrder>) => {
 		.filter((i) => !!i)
 		.join('; ');
 });
+
 // Изменилось одно из полей
 events.on(
 	/^contacts\..*:change/,
@@ -209,6 +211,9 @@ events.on('contacts:submit', () => {
 			const success = new Success(cloneTemplate(successTemplate), {
 				onClick: () => {
 					modal.close();
+					appData.clearOrderData();
+					order.clearOrder();
+					contacts.clearContacts();
 				},
 			});
 

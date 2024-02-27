@@ -4,7 +4,6 @@ import {
 	IAppState,
 	IOrder,
 	IOrderForm,
-	IOrderResult,
 	ProductStatus,
 	FormErrors,
 } from '../types';
@@ -57,7 +56,6 @@ export class AppState extends Model<IAppState> {
 	clearBasketData() {
 		this.basket.forEach((item) => {
 			item.status = 'sell';
-			console.log(item.status);
 		});
 		this.basket = [];
 	}
@@ -68,17 +66,32 @@ export class AppState extends Model<IAppState> {
 		this.emitChanges('basket:open');
 		item.status = 'onSale';
 	}
+
 	//количество товаров в корзине
 	getBasketAmount() {
 		return this.basket.length;
 	}
+
 	//массив товаров в корзине
 	getBasketProducts(): IProduct[] {
 		return this.basket;
 	}
+
 	//общая стоимость
 	getTotal() {
 		return this.basket.reduce((a, c) => a + c.price, 0);
+	}
+
+	//сбросить данные
+	clearOrderData() {
+		this.order = {
+			address: '',
+			payment: '',
+			email: '',
+			phone: '',
+			items: [],
+			total: null,
+		};
 	}
 
 	setOrderField(field: keyof IOrderForm, value: string) {

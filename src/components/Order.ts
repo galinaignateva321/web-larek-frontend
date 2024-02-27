@@ -13,6 +13,7 @@ export class Order extends Form<IOrderForm> {
 
 		this._card = container.elements.namedItem('card') as HTMLButtonElement;
 		this._cash = container.elements.namedItem('cash') as HTMLButtonElement;
+		this._address = container.elements.namedItem('address') as HTMLInputElement;
 
 		if (this._cash) {
 			this._cash.addEventListener('click', () => {
@@ -28,5 +29,9 @@ export class Order extends Form<IOrderForm> {
 				this.onInputChange('payment', 'card');
 			});
 		}
+	}
+	clearOrder() {
+		(this.container.elements.namedItem('address') as HTMLInputElement).value =
+			'';
 	}
 }
