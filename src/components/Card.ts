@@ -22,8 +22,7 @@ export class Card<T> extends Component<ICard<T>> {
 	constructor(
 		protected blockName: string,
 		container: HTMLElement,
-		actions?: ICardActions,
-		events?: IEvents
+		actions?: ICardActions
 	) {
 		super(container);
 
@@ -44,6 +43,17 @@ export class Card<T> extends Component<ICard<T>> {
 	}
 
 	set category(value: string) {
+		if (value === 'софт-скил') {
+			this._category.classList.add('card__category_soft');
+		} else if (value === 'другое') {
+			this._category.classList.add('card__category_other');
+		} else if (value === 'дополнительное') {
+			this._category.classList.add('card__category_additional');
+		} else if (value === 'кнопка') {
+			this._category.classList.add('card__category_button');
+		} else if (value === 'хард-скил') {
+			this._category.classList.add('card__category_hard');
+		}
 		this.setText(this._category, value);
 	}
 
@@ -106,14 +116,14 @@ export class PreviewItem extends Card<PreviewItemType> {
 
 //товар в отображении корзины
 export class BasketItem extends Card<BasketItemType> {
-	// protected _index: HTMLElement;
+	protected _index?: HTMLElement;
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super('card', container, actions);
-		// this._index = container.querySelector(`.basket__item-index`);
+		this._index = ensureElement<HTMLElement>(`.basket__item-index`, container);
 	}
 
-	// set index(value: number) {
-	// 	this._index.textContent = value.toString();
-	// }
+	set index(value: number) {
+		this._index.textContent = value.toString();
+	}
 }
