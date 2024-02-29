@@ -10,7 +10,7 @@ import {
 	ProductItem,
 } from './components/AppData';
 import { Page } from './components/Page';
-import { Card, PreviewItem, ShopItem, BasketItem } from './components/Card';
+import { PreviewItem, ShopItem, BasketItem } from './components/Card';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Basket } from './components/Basket';
 import { Order } from './components/Order';
@@ -70,34 +70,17 @@ api
 events.on('card:selected', (item: ProductItem) => {
 	const card = new PreviewItem(cloneTemplate(cardPreviewTemplate), {
 		onClick: () => {
-			events.emit('basket:changed', item);
+			events.emit('item:add', item);
+			modal.close();
 		},
 	});
 	if (item.status === 'inBasket') {
 		card.setDisabled(card.button, true);
 		card.setText(card.button, 'В корзине');
-		return modal.render({
-			content: card.render({
-				image: item.image,
-				category: item.category,
-				title: item.title,
-				description: item.description,
-				price: item.price,
-			}),
-		});
 	}
 	if (item.status === 'sell') {
 		card.setDisabled(card.button, true);
 		card.setText(card.button, 'Продано');
-		return modal.render({
-			content: card.render({
-				image: item.image,
-				category: item.category,
-				title: item.title,
-				description: item.description,
-				price: item.price,
-			}),
-		});
 	}
 	return modal.render({
 		content: card.render({
@@ -110,15 +93,9 @@ events.on('card:selected', (item: ProductItem) => {
 	});
 });
 
-//Добавляем товар в корзину
-events.on('basket:changed', (item: ProductItem) => {
-	appData.addProductToBasket(item);
+//корзина
+events.on('basket:changed', () => {
 	page.counter = appData.getBasketAmount();
-	modal.close();
-});
-
-//модалка корзины
-events.on('basket:open', () => {
 	const basketItems = appData.getBasketProducts().map((item, i) => {
 		const basketItem = new BasketItem(cloneTemplate(cardBasketTemplate), {
 			onClick: () => {
@@ -139,11 +116,14 @@ events.on('basket:open', () => {
 	});
 });
 
+//добавить товар в корзину
+events.on('item:add', (item: ProductItem) => {
+	appData.addProductToBasket(item);
+});
+
 //удаление товара из корзины
 events.on('item:remove', (item: ProductItem) => {
 	appData.removeItemFromBasket(item);
-	basket.total = appData.getTotal();
-	page.counter = appData.getBasketAmount();
 });
 
 //оформление заказа

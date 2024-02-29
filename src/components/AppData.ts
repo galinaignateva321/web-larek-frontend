@@ -46,9 +46,10 @@ export class AppState extends Model<IAppState> {
 
 	//добавить товар в корзину
 	addProductToBasket(item: ProductItem) {
-		if (item.status !== 'sell' && item.price !== null) {
+		if (item.price !== null) {
 			this.basket.push(item);
 		}
+		this.emitChanges('basket:changed');
 		item.status = 'inBasket';
 	}
 
@@ -63,7 +64,7 @@ export class AppState extends Model<IAppState> {
 	//удалить товар с корзины
 	removeItemFromBasket(item: ProductItem) {
 		this.basket = this.basket.filter((el) => el.id !== item.id);
-		this.emitChanges('basket:open');
+		this.emitChanges('basket:changed');
 		item.status = 'onSale';
 	}
 
