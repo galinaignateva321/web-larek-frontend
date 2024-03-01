@@ -57,17 +57,13 @@ export class Card<T> extends Component<ICard<T>> {
 		this.setText(this._category, value);
 	}
 
-	get category(): string {
-		return this._category.textContent || '';
-	}
+	// set id(value: string) {
+	// 	this.container.dataset.id = value;
+	// }
 
-	set id(value: string) {
-		this.container.dataset.id = value;
-	}
-
-	get id(): string {
-		return this.container.dataset.id || '';
-	}
+	// get id(): string {
+	// 	return this.container.dataset.id || '';
+	// }
 
 	set title(value: string) {
 		this.setText(this._title, value);
@@ -110,7 +106,6 @@ export class ShopItem extends Card<ShopItemType> {
 export class PreviewItem extends Card<PreviewItemType> {
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super('card', container, actions);
-		this.button = ensureElement<HTMLButtonElement>('.card__button', container);
 	}
 }
 

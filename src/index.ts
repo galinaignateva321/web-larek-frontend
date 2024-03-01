@@ -187,9 +187,6 @@ events.on('contacts:submit', () => {
 			const success = new Success(cloneTemplate(successTemplate), {
 				onClick: () => {
 					modal.close();
-					appData.clearOrderData();
-					order.clearOrder();
-					contacts.clearContacts();
 				},
 			});
 
@@ -203,6 +200,12 @@ events.on('contacts:submit', () => {
 		})
 		.catch((err) => {
 			console.error(err);
+		})
+		.finally(() => {
+			order.clearOrder();
+			order.offActiveButtons();
+			contacts.clearContacts();
+			appData.clearOrderData();
 		});
 });
 

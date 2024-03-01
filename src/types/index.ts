@@ -1,4 +1,5 @@
 //Интерфейсы для данных
+
 //данные товара
 export interface IProduct {
 	id: string;
@@ -12,18 +13,10 @@ export interface IProduct {
 	index: number;
 }
 
-export interface IProductPreview extends IProduct {
-	description: string;
-}
 //cтатус товара
 export type ProductStatus = 'onSale' | 'inBasket' | 'sell';
 
-//все товары на главной
-export type CatalogChangeEvent = {
-	shop: IProduct[];
-};
-
-//
+//интерфейс работы с данными
 export interface IAppState {
 	shop: IProduct[];
 	basket: IProduct[];
@@ -37,23 +30,27 @@ export interface IProductAPI {
 	getProductItem: (id: string) => Promise<IProduct>;
 	orderProducts: (order: IOrder) => Promise<IOrderResult>;
 }
-//результат заказа
+
+//id заказываемого товара
 export interface IOrderResult {
 	id: string;
 }
 
 //Интерфейсы для отображения
+
 //главная страница
 export interface IPage {
 	counter: number;
 	products: HTMLElement[];
 	locked: boolean;
 }
-//карточка
+
+//карточка при клике
 export interface ICardActions {
 	onClick: (event: MouseEvent) => void;
 }
 
+//карточка
 export interface ICard<T> {
 	category: string;
 	title: string;
@@ -63,6 +60,7 @@ export interface ICard<T> {
 	buttonText: string;
 	index?: number;
 }
+
 //состояние карточки при каталоге
 export type ShopItemType = {
 	label: string;
@@ -73,6 +71,7 @@ export type PreviewItemType = {
 	label: string;
 };
 
+//состояние карточки в корзине
 export type BasketItemType = {
 	title: string;
 	price: number;
@@ -88,15 +87,18 @@ export interface IBasketView {
 	button: HTMLButtonElement;
 }
 
+//модалка
 export interface IModal {
 	content: HTMLElement;
 }
 
+//форма
 export interface IForm {
 	valid: boolean;
 	errors: string[];
 }
-//заказ
+
+//заказ все инпуты
 export interface IOrderForm {
 	address: string;
 	payment: string;
@@ -104,10 +106,6 @@ export interface IOrderForm {
 	phone: string;
 }
 
-// //оплата
-// export type TapPayment = {
-// 	onClick: (tab: string) => void;
-// };
 //контакты
 export interface IContactsForm {
 	email: string;
@@ -124,7 +122,6 @@ export interface ISuccess {
 }
 
 //Events Слой презентера (Presenter)
-
 export type EventName = string | RegExp;
 export type Subscriber = Function;
 export type EmitterEvent = {
