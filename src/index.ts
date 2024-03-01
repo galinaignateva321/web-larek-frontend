@@ -4,11 +4,7 @@ import { EventEmitter } from './components/base/events';
 import { API_URL, CDN_URL } from './utils/constants';
 import { Modal } from './components/common/Modal';
 import { ProductAPI } from './components/LarekAPI';
-import {
-	AppState,
-	CatalogChangeEvent,
-	ProductItem,
-} from './components/AppData';
+import { AppState, CatalogChangeEvent } from './components/AppData';
 import { Page } from './components/Page';
 import { PreviewItem, ShopItem, BasketItem } from './components/Card';
 import { cloneTemplate, ensureElement } from './utils/utils';
@@ -16,7 +12,7 @@ import { Basket } from './components/Basket';
 import { Order } from './components/Order';
 import { Contacts } from './components/Contacts';
 import { Success } from './components/Success';
-import { IOrder, IOrderForm, IContactsForm } from './types';
+import { IOrder, IOrderForm, IProduct } from './types';
 const events = new EventEmitter();
 const api = new ProductAPI(CDN_URL, API_URL);
 
@@ -67,7 +63,7 @@ api
 	});
 
 // Открыть продукт
-events.on('card:selected', (item: ProductItem) => {
+events.on('card:selected', (item: IProduct) => {
 	const card = new PreviewItem(cloneTemplate(cardPreviewTemplate), {
 		onClick: () => {
 			events.emit('item:add', item);
@@ -117,12 +113,12 @@ events.on('basket:changed', () => {
 });
 
 //добавить товар в корзину
-events.on('item:add', (item: ProductItem) => {
+events.on('item:add', (item: IProduct) => {
 	appData.addProductToBasket(item);
 });
 
 //удаление товара из корзины
-events.on('item:remove', (item: ProductItem) => {
+events.on('item:remove', (item: IProduct) => {
 	appData.removeItemFromBasket(item);
 });
 
@@ -131,7 +127,7 @@ events.on('order:open', () => {
 	modal.render({
 		content: order.render({
 			address: '',
-			valid: false,
+			valid: appData.isFilledOrderInputs(),
 			errors: [],
 		}),
 	});
@@ -160,7 +156,7 @@ events.on('order:submit', () => {
 	appData.setItems();
 	modal.render({
 		content: contacts.render({
-			valid: false,
+			valid: appData.isFilledContactsInputs(),
 			errors: [],
 		}),
 	});

@@ -9,24 +9,12 @@ import {
 } from '../types';
 
 export type CatalogChangeEvent = {
-	shop: ProductItem[];
+	shop: IProduct[];
 };
 
-export class ProductItem extends Model<IProduct> {
-	id: string;
-	description?: string;
-	image: string;
-	title: string;
-	category: string;
-	price: number | null;
-	status: ProductStatus;
-	itemCount: number = 0;
-	index: number = 0;
-}
-
 export class AppState extends Model<IAppState> {
-	shop: ProductItem[];
-	basket: ProductItem[] = [];
+	shop: IProduct[] = [];
+	basket: IProduct[] = [];
 	order: IOrder = {
 		address: '',
 		payment: '',
@@ -40,12 +28,12 @@ export class AppState extends Model<IAppState> {
 
 	//массив для главной страницы
 	setProducts(items: IProduct[]) {
-		this.shop = items.map((item) => new ProductItem(item, this.events));
+		this.shop = items;
 		this.emitChanges('products:changed', { shop: this.shop });
 	}
 
 	//добавить товар в корзину
-	addProductToBasket(item: ProductItem) {
+	addProductToBasket(item: IProduct) {
 		if (item.price !== null) {
 			this.basket.push(item);
 		}
@@ -62,7 +50,7 @@ export class AppState extends Model<IAppState> {
 	}
 
 	//удалить товар с корзины
-	removeItemFromBasket(item: ProductItem) {
+	removeItemFromBasket(item: IProduct) {
 		this.basket = this.basket.filter((el) => el.id !== item.id);
 		this.emitChanges('basket:changed');
 		item.status = 'onSale';
@@ -132,8 +120,18 @@ export class AppState extends Model<IAppState> {
 		this.events.emit('orderFormErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
+
 	//id заказываемых продуктов
 	setItems() {
 		this.order.items = this.basket.map((item) => item.id);
+	}
+
+	// Проверка заполненности
+	isFilledOrderInputs(): boolean {
+		return !!this.order.address && !!this.order.payment;
+	}
+	// Проверка заполненности
+	isFilledContactsInputs(): boolean {
+		return !!this.order.email && !!this.order.phone;
 	}
 }

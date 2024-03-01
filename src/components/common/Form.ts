@@ -14,6 +14,7 @@ export class Form<T> extends Component<IForm> {
 			this.container
 		);
 		this._errors = ensureElement<HTMLElement>('.form__errors', this.container);
+
 		this.container.addEventListener('input', (e: Event) => {
 			const target = e.target as HTMLInputElement;
 			const field = target.name as keyof T;
